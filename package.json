@@ -1,6 +1,6 @@
 {
   "name": "wise-rag",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight RAG helper library (embeddings, splitter, in-memory store, Postgres adapter)",
   "type": "module",
   "main": "dist/index.cjs",
@@ -26,7 +26,12 @@
     "url": "https://github.com/Tarun-dube/wise-rag/issues"
   },
   "homepage": "https://github.com/Tarun-dube/wise-rag#readme",
-  "keywords": ["rag", "embeddings", "vector-store", "pgvector"],
+  "keywords": [
+    "rag",
+    "embeddings",
+    "vector-store",
+    "pgvector"
+  ],
   "author": "",
   "license": "MIT",
   "engines": {
