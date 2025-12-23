@@ -1,0 +1,54 @@
+{
+  "name": "wise-rag",
+  "version": "1.0.0",
+  "description": "A lightweight RAG helper library (embeddings, splitter, in-memory store, Postgres adapter)",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build && npm run typecheck",
+    "prepublishOnly": "npm run build && npm run typecheck"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarun-dube/wise-rag.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tarun-dube/wise-rag/issues"
+  },
+  "homepage": "https://github.com/Tarun-dube/wise-rag#readme",
+  "keywords": ["rag", "embeddings", "vector-store", "pgvector"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "openai": "^5.0.0"
+  },
+  "peerDependencies": {
+    "pg": "^8.0.0",
+    "pgvector": "^0.2.0"
+  },
+  "devDependencies": {
+    "tsup": "^6.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "pg": "^8.10.0",
+    "pgvector": "^0.2.0",
+    "@types/node": "^18.0.0",
+    "@types/pg": "^8.6.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
