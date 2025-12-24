@@ -1,6 +1,6 @@
 ## Quick start
 
-This repository provides a minimal RAG helper library with:
+This package is published on npm as `wise-rag`. It provides a minimal RAG helper library with:
 
 - A text splitter (`TextSplitter`)
 - An embeddings wrapper for OpenAI (`OpenAIEmbeddings`)
@@ -8,26 +8,21 @@ This repository provides a minimal RAG helper library with:
 - A Postgres-backed store using `pgvector` (`PostgresStore`)
 
 Prerequisites
+
 - Node 18+ / npm
-- An OpenAI API key if you want to use `OpenAIEmbeddings` (set `OPENAI_API_KEY` or pass via options)
+- If you use `OpenAIEmbeddings`, you need an OpenAI API key (set `OPENAI_API_KEY` or pass via options)
+- If you use `PostgresStore`, install `pg` and ensure your Postgres has the `pgvector` extension (see notes below)
 
-Install
-
-```bash
-cd my-rag-lib
-npm install
-```
-
-Build
+Install (consumer)
 
 ```bash
-npm run build
+npm install wise-rag
 ```
 
 Quick example (TypeScript)
 
 ```ts
-import { TextSplitter, InMemoryStore, OpenAIEmbeddings } from 'my-rag-lib';
+import { TextSplitter, InMemoryStore, OpenAIEmbeddings } from 'wise-rag';
 
 async function main() {
   const text = `Long document text ...`;
@@ -53,39 +48,70 @@ async function main() {
 main().catch(console.error);
 ```
 
+JavaScript (ESM) example
+
+```js
+import { TextSplitter, InMemoryStore, OpenAIEmbeddings } from 'wise-rag';
+
+const splitter = new TextSplitter(800, 200);
+const docs = splitter.splitToDocuments('Long document text', 'doc1');
+const emb = new OpenAIEmbeddings({ apiKey: process.env.OPENAI_API_KEY });
+const vectors = await emb.embedBatch(docs.map(d => d.content));
+const store = new InMemoryStore();
+await store.add(docs, vectors);
+const qVec = await emb.embed('summary?');
+console.log(await store.search(qVec, 3));
+```
+
+Developer notes (if you're working on the repo)
+
+Install dependencies and build locally:
+
+```bash
+cd my-rag-lib
+npm install
+npm run build
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
 API reference (short)
 
 - Document
 
-  ```ts
-  interface Document {
-    id?: string;
-    content: string;
-    metadata?: Record<string, unknown>;
-  }
-  ```
+```ts
+interface Document {
+  id?: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+}
+```
 
 - Embeddings
 
-  ```ts
-  interface Embeddings {
-    embed(input: string): Promise<number[]>;
-    embedBatch(inputs: string[]): Promise<number[][]>;
-    readonly dimension?: number;
-  }
-  ```
+```ts
+interface Embeddings {
+  embed(input: string): Promise<number[]>;
+  embedBatch(inputs: string[]): Promise<number[][]>;
+  readonly dimension?: number;
+}
+```
 
 - VectorStore
 
-  ```ts
-  interface VectorStore {
-    add(documents: Document[], embeddings: number[][]): Promise<void>;
-    search(queryEmbedding: number[], topK: number): Promise<Array<{ document: Document; score: number }>>;
-    delete(ids: string[]): Promise<void>;
-    serialize(): Promise<string>;
-    deserialize(serialized: string): Promise<void>;
-  }
-  ```
+```ts
+interface VectorStore {
+  add(documents: Document[], embeddings: number[][]): Promise<void>;
+  search(queryEmbedding: number[], topK: number): Promise<Array<{ document: Document; score: number }>>;
+  delete(ids: string[]): Promise<void>;
+  serialize(): Promise<string>;
+  deserialize(serialized: string): Promise<void>;
+}
+```
 
 Provided implementations
 
@@ -120,23 +146,13 @@ CREATE TABLE IF NOT EXISTS documents (
 );
 ```
 
-Testing
+Publishing & repository
 
-Run tests with:
-
-```bash
-npm test
-```
-
-Where to look next
-
-- `src/splitters/TextSplitter.ts` — splitter implementation and options
-- `src/embeddings/OpenAIEmbeddings.ts` — OpenAI integration
-- `src/stores/InMemoryStore.ts` — quick dev store
-- `src/stores/PostgresStore.ts` — pgvector-backed store
+- This package is published on npm as `wise-rag` and the source is available at https://github.com/Tarun-dube/wise-rag
 
 Contributing
 
-If you add features or change public APIs, please update this document and add examples under `tests/` or a future `examples/` directory.
+If you add features or change public APIs, please update this document and add examples under `tests/` or an `examples/` directory.
 
 License: MIT
+
